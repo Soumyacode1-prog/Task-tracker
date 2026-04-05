@@ -2,7 +2,7 @@
 
 Simple full-stack task app with login/signup and protected task management.
 
-Project video:
+PROJECT VIDEO LINK :
 https://docs.google.com/videos/d/1wODozt0t98vMM3ai8OjcEL2IyHRl9zjpfXkT1_-6ovk/edit?usp=sharing
 
 ## Features
