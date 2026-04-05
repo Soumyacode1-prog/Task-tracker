@@ -2,6 +2,8 @@
 
 A simple to-do list app where you can create an account, add tasks, mark them done, and keep everything organized.
 
+PROJECT VIDEO LINK : https://docs.google.com/videos/d/1wODozt0t98vMM3ai8OjcEL2IyHRl9zjpfXkT1_-6ovk/edit?usp=sharing
+
 ## What This App Does
 
 - Create a login account with email & password
