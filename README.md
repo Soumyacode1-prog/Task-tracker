@@ -79,14 +79,14 @@ Exit:
 Create/update `server/.env`:
 
 ```env
-PORT=5000
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=2580
-DB_NAME=tasktracker
-JWT_SECRET=123456
-CLIENT_URL=http://localhost:5173
+PORT=""
+DB_HOST=""
+DB_PORT=""
+DB_USER=""
+DB_PASSWORD=""
+DB_NAME=""
+JWT_SECRET=""
+CLIENT_URL=""
 ```
 
 ### 4. Start Backend
