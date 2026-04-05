@@ -1,25 +1,32 @@
 # Task Tracker
 
-A simple to-do list app where you can create an account, add tasks, mark them done, and keep everything organized.
+Simple full-stack task app with login/signup and protected task management.
 
-PROJECT VIDEO LINK : https://docs.google.com/videos/d/1wODozt0t98vMM3ai8OjcEL2IyHRl9zjpfXkT1_-6ovk/edit?usp=sharing
+Project video:
+https://docs.google.com/videos/d/1wODozt0t98vMM3ai8OjcEL2IyHRl9zjpfXkT1_-6ovk/edit?usp=sharing
 
-## What This App Does
+## Features
 
-- Create a login account with email & password
-- Add new tasks anytime
-- Mark tasks as done 
-- See all your tasks in one place
-- Only you can see your tasks (private)
+- Landing page before login/register
+- User signup and login using JWT
+- Create tasks
+- View only your own tasks
+- Mark tasks complete
 
-## What You Need Installed
+## Tech Stack
 
-You need 2 things before starting. If you don't have them, download and install:
+- Frontend: React + Vite + Tailwind CSS
+- Backend: Node.js + Express
+- Database: PostgreSQL
 
-1. **Node.js** (includes npm) — https://nodejs.org/
-2. **PostgreSQL** — https://www.postgresql.org/download/
+## Local Setup
 
-Check they're installed by running these commands:
+### 1. Install Required Tools
+
+- Node.js + npm: https://nodejs.org/
+- PostgreSQL: https://www.postgresql.org/download/
+
+Check installation:
 
 ```bash
 node --version
@@ -27,33 +34,22 @@ npm --version
 psql --version
 ```
 
-If you see version numbers, you're good to go!
+### 2. Create Database and Tables
 
----
-
-## How to Set Everything Up
-
-### Step 1: Get Your Database Ready
-
-Open a terminal and log into PostgreSQL:
+Open PostgreSQL:
 
 ```bash
 psql -U postgres
 ```
 
-Create a new database:
+Create DB and connect:
 
 ```sql
-CREATE DATABASE "task-tracker";
+CREATE DATABASE tasktracker;
+\c tasktracker
 ```
 
-Connect to it:
-
-```sql
-\c task-tracker
-```
-
-Create the tables:
+Create tables:
 
 ```sql
 CREATE TABLE users (
@@ -72,43 +68,28 @@ CREATE TABLE tasks (
 );
 ```
 
-Check that everything was created:
+Exit:
 
 ```sql
-\dt
+\q
 ```
 
-You should see `users` and `tasks` tables. Type `\q` to exit.
+### 3. Configure Environment Variables
 
-### Step 2: Set Up the Environment File
-
-In the `server` folder, create or open `.env` and make sure it has:
+Create/update `server/.env`:
 
 ```env
-PORT=""
-DB_HOST=""
-DB_PORT=""
-DB_USER=""
-DB_PASSWORD=""
-DB_NAME=""
-JWT_SECRET=""
-CLIENT_URL=""
+PORT=5000
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=2580
+DB_NAME=tasktracker
+JWT_SECRET=123456
+CLIENT_URL=http://localhost:5173
 ```
 
-**What do these mean?**
-
-- `PORT` - Where the app's backend runs (port 5000)
-- `DB_HOST` - Where the database is (localhost = your computer)
-- `DB_PORT` - Database port (always 5432 for PostgreSQL)
-- `DB_USER` - Database user (usually `postgres`)
-- `DB_PASSWORD` - Your PostgreSQL password
-- `DB_NAME` - The database name we just created
-- `JWT_SECRET` - Secret code for login tokens
-- `CLIENT_URL` - Where the frontend runs
-
-### Step 3: Start the Backend
-
-Open a terminal and go to the `server` folder:
+### 4. Start Backend
 
 ```bash
 cd server
@@ -116,13 +97,11 @@ npm install
 npm run dev
 ```
 
-You should see: `Server running on port 5000`
+API runs at `http://localhost:5000`.
 
-Keep this terminal open!
+### 5. Start Frontend
 
-### Step 4: Start the Frontend
-
-Open a **new terminal** and go to the `client` folder:
+Open another terminal:
 
 ```bash
 cd client
@@ -130,195 +109,81 @@ npm install
 npm run dev
 ```
 
-You'll see something like: `Local: http://localhost:5173`
+App runs at `http://localhost:5173`.
 
-Open this link in your browser. You're done! 🎉
+## App Flow
 
----
+1. Open landing page at `http://localhost:5173`
+2. Signup or login
+3. After valid login, access task page
+4. Create tasks and mark them complete
 
-## How to Use It
+## API Endpoints
 
-## How to Use It
+Auth:
 
-1. Go to http://localhost:5173
-2. **Sign up** with your email and password
-3. **Log in** with your account
-4. **Add a task** in the text box and click "Add Task"
-5. **Mark it done** by clicking "Mark Completed"
-6. Click **Logout** to leave
+- `POST /auth/signup`
+- `POST /auth/login`
 
-That's it!
+Tasks (Protected, `Authorization: Bearer <token>`):
 
----
+- `POST /tasks`
+- `GET /tasks`
+- `PATCH /tasks/:id/complete` (used by UI)
+- `PATCH /tasks/:id` (toggle endpoint also available)
 
-## Testing with Postman
+## Postman Quick Test
 
-Don't want to use the browser? Test everything with Postman!
+Signup:
 
-**Download Postman:** https://www.postman.com/downloads/
-
-### 1. Sign Up
-
-```
+```http
 POST http://localhost:5000/auth/signup
+Content-Type: application/json
 
-Body (JSON):
 {
   "email": "test@example.com",
   "password": "password123"
 }
-
-Response:
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI..."
-}
 ```
 
-### 2. Login
+Login:
 
-```
+```http
 POST http://localhost:5000/auth/login
+Content-Type: application/json
 
-Body (JSON):
 {
   "email": "test@example.com",
   "password": "password123"
 }
-
-Response:
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI..."
-}
 ```
 
-Copy the token for the next requests!
+Create task:
 
-### 3. Create a Task
-
-```
+```http
 POST http://localhost:5000/tasks
+Authorization: Bearer <token>
+Content-Type: application/json
 
-Headers:
-Authorization: Bearer <paste_your_token_here>
-
-Body (JSON):
 {
   "title": "Buy groceries"
 }
-
-Response:
-{
-  "id": 1,
-  "user_id": 1,
-  "title": "Buy groceries",
-  "completed": false,
-  "created_at": "2026-04-05T10:30:00.000Z"
-}
 ```
-
-### 4. Get All Your Tasks
-
-```
-GET http://localhost:5000/tasks
-
-Headers:
-Authorization: Bearer <paste_your_token_here>
-
-Response:
-[
-  {
-    "id": 1,
-    "user_id": 1,
-    "title": "Buy groceries",
-    "completed": false,
-    "created_at": "2026-04-05T10:30:00.000Z"
-  }
-]
-```
-
-### 5. Mark Task as Done
-
-```
-PATCH http://localhost:5000/tasks/1/complete
-
-Headers:
-Authorization: Bearer <paste_your_token_here>
-
-Response:
-{
-  "id": 1,
-  "user_id": 1,
-  "title": "Buy groceries",
-  "completed": true,
-  "created_at": "2026-04-05T10:30:00.000Z"
-}
-```
-
----
-
-## Database Tables
-
-**Users Table**
-- `id` - Unique number for each user
-- `email` - User's email (unique)
-- `password` - Encrypted password
-- `created_at` - When account was made
-
-**Tasks Table**
-- `id` - Unique number for each task
-- `user_id` - Which user owns this task
-- `title` - What the task is
-- `completed` - Is it done? (true/false)
-- `created_at` - When task was created
-
----
-
-**Database error?**
-- Make sure PostgreSQL is running
-- Check that your password in `.env` is correct
-- Make sure you created the database: `psql -U postgres -l` (look for `task-tracker`)
-
-**Port 5000 already in use?**
-- Change `PORT` in `.env` to something else like `5001`
-
-**Nothing loading?**
-- Make sure both `npm run dev` commands are running (one in server, one in client)
-- Refresh your browser
-- Check if http://localhost:5173 loads in the browser
-
----
-
-## What's Really Happening (The Tech Part)
-
-**Backend** — Node.js + Express (listens on port 5000)
-**Frontend** — React app (listens on port 5173)
-**Database** — PostgreSQL (stores your user data and tasks)
-
-When you sign up:
-1. Your password gets scrambled (hashed) for security
-2. A special code (JWT token) is created to keep you logged in
-3. Every time you ask for your tasks, the app checks this token
-
-Security notes:
-- Your password is encrypted, nobody can read it
-- You can only see your own tasks
-- Login tokens expire after 7 days
-
----
 
 ## Folder Structure
 
-```
+```text
 task-tracker/
-├── client/           ← The website (React)
+├── client/
 │   └── src/
-│       ├── pages/    ← Login, Signup, Tasks pages
-│       ├── components/ ← Task cards
-│       └── api/      ← Talks to the backend
-├── server/           ← The backend (Node.js)
-│   ├── controllers/  ← Brain of the app
-│   ├── routes/       ← API endpoints
-│   ├── db/           ← Database connection
-│   └── .env          ← Settings file
-└── README.md         ← This file
+│       ├── pages/
+│       ├── components/
+│       └── api/
+├── server/
+│   ├── controllers/
+│   ├── routes/
+│   ├── middleware/
+│   ├── db/
+│   └── server.js
+└── README.md
 ```
