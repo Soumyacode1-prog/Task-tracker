@@ -10,5 +10,7 @@ router.post("/", createTask);
 router.get("/", getTasks);
 router.patch("/:id", toggleTask);
 router.patch("/:id/complete", markTaskCompleted);
+router.post("/:id", deleteTask);
+
 
 module.exports = router;

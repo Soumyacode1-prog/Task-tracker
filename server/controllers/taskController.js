@@ -81,9 +81,59 @@ const markTaskCompleted = async (req, res) => {
   }
 };
 
+
+// const deleteTask = async (req, res) => {
+//   const taskId = req.params.id;
+//   const userId = req.user.id;
+
+//   try {
+//     const deleteTask = await pool.query(
+//       "UPDATE tasks SET completed = TRUE WHERE id = $1 AND user_id = $2 RETURNING id, user_id, title, completed, created_at",
+//       [taskId, userId]
+//     );
+
+//     if (deleteTask.rows.length === 0) {
+//       return res.status(404).json({ message: "Task not found" });
+//     }
+
+//     return res.status(200).json(deleteTask.rows[0]);
+//   } catch (error) {
+//     return res.status(500).json({ message: "Failed to mark task as completed" });
+//   }
+// };
+const deleteTask = async (req, res) => {
+  const taskId = req.params.id;
+  const userId = req.user.userId; 
+
+  try {
+    const result = await pool.query(
+      `UPDATE tasks
+       SET is_deleted = TRUE        ← soft delete: just flip the flag
+       WHERE id = $1
+         AND user_id = $2           ← security: only delete YOUR task
+         AND is_deleted = FALSE      ← don't re-delete already deleted tasks
+       RETURNING id, title, is_deleted`,
+      [taskId, userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    return res.status(200).json({
+      message: "Task deleted",
+      task: result.rows[0]
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Failed to delete task" });
+  }
+};
 module.exports = {
   createTask,
   getTasks,
   toggleTask,
   markTaskCompleted,
+  deleteTask,
 };

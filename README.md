@@ -26,7 +26,7 @@ https://docs.google.com/videos/d/1wODozt0t98vMM3ai8OjcEL2IyHRl9zjpfXkT1_-6ovk/ed
 - Node.js + npm: https://nodejs.org/
 - PostgreSQL: https://www.postgresql.org/download/
 
-Check installation:
+Check they're installed by running these commands:
 
 ```bash
 node --version
